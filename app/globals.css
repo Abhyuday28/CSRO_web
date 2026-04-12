@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f7f5f0;
+  --foreground: #0a2540;
+  --primary-blue: #0ea5e9;
+  --deep-blue: #0a2540;
+  --accent-aqua: #38bdf8;
+  --tagline-green: #22c55e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--foreground);
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.08), transparent 28%),
+    radial-gradient(circle at right top, rgba(14, 165, 233, 0.06), transparent 22%),
+    linear-gradient(180deg, #faf8f3 0%, #f7f5f0 48%, #f4f1eb 100%);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 800;
+}
+
+@layer components {
+  .glass-panel {
+    @apply border border-white/40 bg-white/45 backdrop-blur-xl;
+    box-shadow: 0 20px 45px rgba(10, 37, 64, 0.12);
+  }
+
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-spacing {
+    @apply py-6 sm:py-14;
+  }
+
+  .section-heading {
+    @apply text-3xl font-semibold tracking-tight text-deep sm:text-4xl;
+  }
+
+  .section-copy {
+    @apply max-w-2xl text-sm leading-7 text-slate-600 sm:text-base;
+  }
+
+  .cta-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-glow transition duration-300 hover:-translate-y-0.5 hover:bg-success;
+  }
+
+  .cta-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-primary/30 bg-white/60 px-5 py-3 text-sm font-semibold text-deep transition duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-white;
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
