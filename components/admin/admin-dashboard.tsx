@@ -220,7 +220,7 @@ export function AdminDashboard({
         </aside>
 
         <section className="min-w-0">
-          <header className="sticky top-0 z-30 border-b border-white/50 bg-white/75 px-5 py-4 backdrop-blur-xl">
+          <header className="sticky top-0 z-30 border-b border-white/50 bg-white/75 px-5 py-7 backdrop-blur-xl">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Admin Dashboard</p>

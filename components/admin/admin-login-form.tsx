@@ -31,7 +31,7 @@ export function AdminLoginForm() {
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center justify-center">
         <section className="glass-panel grid w-full max-w-4xl overflow-hidden rounded-[28px] md:grid-cols-[1fr_1.1fr]">
           <div className="bg-primary px-6 py-8 text-white sm:px-8">
-            <Link href="/" className="inline-flex rounded-lg bg-white/95 px-4 py-3">
+            <Link href="/" className="inline-flex items-center justify-center rounded-lg bg-white/95 px-4 py-3">
               <Image
                 src="/csro_draft.svg"
                 alt="CSRO Logo"

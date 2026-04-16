@@ -57,7 +57,7 @@ export function AdminOverview({
           <h2 className="text-xl font-extrabold text-deep">Recent Activity</h2>
           <p className="text-sm text-slate-500">Latest demo requests</p>
         </div>
-        <AdminTable headers={["Name", "Phone", "City", "Product", "Date", "Status"]}>
+        <AdminTable headers={["Name", "Phone", "Address", "Preferred time", "Date", "Status"]}>
           {leads.slice(0, 5).map((lead) => (
             <tr key={lead.id} className="transition hover:bg-slate-50">
               <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-950">{lead.name}</td>

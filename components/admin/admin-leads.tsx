@@ -72,7 +72,7 @@ export function AdminLeads({
       </div>
 
       <AdminTable
-        headers={["Name", "Phone", "City", "Interested Product", "Date", "Status", "Actions"]}
+        headers={["Name", "Phone", "Address", "Preferred time", "Date", "Status", "Actions"]}
       >
         {filteredLeads.map((lead) => (
           <tr key={lead.id} className="transition hover:bg-slate-50">
@@ -114,8 +114,8 @@ export function AdminLeads({
           <dl className="grid gap-4 text-sm text-slate-700 sm:grid-cols-2">
             <Detail label="Name" value={selectedLead.name} />
             <Detail label="Phone" value={selectedLead.phone} />
-            <Detail label="City" value={selectedLead.city} />
-            <Detail label="Interested Product" value={selectedLead.product} />
+            <Detail label="Address" value={selectedLead.city} />
+            <Detail label="Preferred time" value={selectedLead.product} />
             <Detail label="Date" value={formatDate(selectedLead.createdAt)} />
             <div>
               <dt className="font-semibold text-slate-950">Status</dt>
