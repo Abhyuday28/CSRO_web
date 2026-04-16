@@ -11,21 +11,29 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as Partial<ServiceRequest>;
-  const serviceRequest: ServiceRequest = {
-    id: createId("service"),
-    name: body.name ?? "",
-    phone: body.phone ?? "",
-    issue: body.issue ?? "",
-    status: body.status ?? "Pending",
-    createdAt: body.createdAt ?? new Date().toISOString()
-  };
+  try {
+    const body = (await request.json()) as Partial<ServiceRequest>;
+    const serviceRequest: ServiceRequest = {
+      id: createId("service"),
+      name: body.name ?? "",
+      phone: body.phone ?? "",
+      issue: body.issue ?? "",
+      status: body.status ?? "Pending",
+      createdAt: body.createdAt ?? new Date().toISOString()
+    };
 
-  await updateStore((data) => {
-    data.serviceRequests.unshift(serviceRequest);
-  });
+    await updateStore((data) => {
+      data.serviceRequests.unshift(serviceRequest);
+    });
 
-  return NextResponse.json(serviceRequest, { status: 201 });
+    return NextResponse.json(serviceRequest, { status: 201 });
+  } catch (error) {
+    console.error("Error creating service request:", error);
+    return NextResponse.json(
+      { message: "Could not save service request", error: String(error) },
+      { status: 500 }
+    );
+  }
 }
 
 export async function PUT(request: Request) {

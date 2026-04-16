@@ -6,13 +6,19 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const data = await readStore();
-  return NextResponse.json(data.leads);
+  try {
+    const data = await readStore();
+    return NextResponse.json(data.leads);
+  } catch (error) {
+    console.error("Error reading leads store:", error);
+    return NextResponse.json({ message: "Could not read leads" }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as Partial<Lead>;
-  const lead: Lead = {
+  try {
+    const body = (await request.json()) as Partial<Lead>;
+    const lead: Lead = {
     id: createId("lead"),
     name: body.name ?? "",
     phone: body.phone ?? "",
@@ -22,11 +28,18 @@ export async function POST(request: Request) {
     createdAt: body.createdAt ?? new Date().toISOString()
   };
 
-  await updateStore((data) => {
-    data.leads.unshift(lead);
-  });
+    await updateStore((data) => {
+      data.leads.unshift(lead);
+    });
 
-  return NextResponse.json(lead, { status: 201 });
+    return NextResponse.json(lead, { status: 201 });
+  } catch (error) {
+    console.error("Error creating lead:", error);
+    return NextResponse.json(
+      { message: "Could not save lead", error: String(error) },
+      { status: 500 }
+    );
+  }
 }
 
 export async function PUT(request: Request) {

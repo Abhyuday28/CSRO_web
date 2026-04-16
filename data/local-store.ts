@@ -43,7 +43,14 @@ async function ensureStoreFile() {
 export async function readStore(): Promise<LocalStoreData> {
   await ensureStoreFile();
   const raw = await fs.readFile(storePath, "utf8");
-  return JSON.parse(raw) as LocalStoreData;
+
+  try {
+    return JSON.parse(raw) as LocalStoreData;
+  } catch (error) {
+    const data = seedData();
+    await writeStore(data);
+    return data;
+  }
 }
 
 export async function writeStore(data: LocalStoreData) {

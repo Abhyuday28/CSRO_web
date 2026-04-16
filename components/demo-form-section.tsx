@@ -13,9 +13,20 @@ export function DemoFormSection() {
       body: JSON.stringify(payload)
     });
 
-    if (!response.ok) {
-      throw new Error("Request failed");
+    const text = await response.text();
+    let errorBody: { message?: string } | undefined;
+
+    try {
+      errorBody = text ? JSON.parse(text) : undefined;
+    } catch {
+      errorBody = undefined;
     }
+
+    if (!response.ok) {
+      throw new Error(errorBody?.message ?? `Request failed with status ${response.status}`);
+    }
+
+    return errorBody;
   }
 
   async function handleDemoSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -23,18 +34,22 @@ export function DemoFormSection() {
     setIsSubmitting(true);
     setMessage("");
 
+    const form = event.currentTarget;
+
     try {
-      const formData = new FormData(event.currentTarget);
+      const formData = new FormData(form);
       await submitRequest("/api/leads", {
         name: String(formData.get("demoName") ?? ""),
         phone: String(formData.get("demoPhone") ?? ""),
         city: String(formData.get("demoAddress") ?? ""),
         product: String(formData.get("demoPreferredTime") ?? "Free demo") || "Free demo"
       });
-      event.currentTarget.reset();
+      form.reset();
       setMessage("Demo request submitted. CSRO will contact you soon.");
-    } catch {
-      setMessage("Could not submit the demo request. Please try again.");
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error ?? "Unknown error");
+      console.error("Demo form submission error:", error);
+      setMessage(`Could not submit the demo request. ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -45,8 +60,10 @@ export function DemoFormSection() {
     setIsSubmitting(true);
     setMessage("");
 
+    const form = event.currentTarget;
+
     try {
-      const formData = new FormData(event.currentTarget);
+      const formData = new FormData(form);
       const serviceType = String(formData.get("serviceType") ?? "Service request") || "Service request";
       const address = String(formData.get("serviceAddress") ?? "");
       const preferredDate = String(formData.get("serviceDate") ?? "");
@@ -58,10 +75,12 @@ export function DemoFormSection() {
           .filter(Boolean)
           .join(" | ")
       });
-      event.currentTarget.reset();
+      form.reset();
       setMessage("Service request submitted. CSRO will contact you soon.");
-    } catch {
-      setMessage("Could not submit the service request. Please try again.");
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error ?? "Unknown error");
+      console.error("Service form submission error:", error);
+      setMessage(`Could not submit the service request. ${errorMessage}`);
     } finally {
       setIsSubmitting(false);
     }

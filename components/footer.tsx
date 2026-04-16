@@ -2,10 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 const footerLinks = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms of Service", href: "/terms-of-service" },
+  // { label: "Contact Us", href: "/contact" },
   { label: "Products", href: "#products" },
-  { label: "Features", href: "#features" },
-  { label: "FAQs", href: "#faqs" },
-  { label: "Book Demo", href: "#demo" }
+  // { label: "Features", href: "#features" },
+  { label: "FAQs", href: "#faqs" }
+  // { label: "Book Demo", href: "#demo" },
 ];
 
 export function Footer() {
@@ -46,21 +49,33 @@ export function Footer() {
           </div>
 
           <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+              Contact Us
+            </p>
+            <nav className="mt-4 grid gap-3">
+              <p>+91 1800-2323-21</p>
+              <p>Hello@csro.com</p>
+              <p>Katihar, Bihar</p>
+            </nav>
+          </div>
+
+
+          {/* <div>
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-slate-500">
-              Admin
+              Contact Us
             </p>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              Manage demo leads, service requests, products, and FAQs.
+              Call at <a href="tel:+919876543210" className="text-primary transition hover:underline">+91 98765 43210</a> or email us at <a href="mailto:
             </p>
             <Link href="/admin/login" className="mt-5 text-sm font-semibold text-slate-500 transition hover:text-primary">
               Admin Login
             </Link>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-8 flex flex-col gap-3 border-t border-white/50 pt-5 text-xs font-semibold text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 CSRO. All rights reserved.</p>
-          <p>A unit of ESSAR BUIT</p>
+          <p>A unit of ESSAR BRITA GROUP</p>
         </div>
       </div>
     </footer>
