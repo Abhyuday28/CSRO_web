@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useState } from "react";
 
 const navLinks = [
-  { label: "Products", href: "/#products" },
-  { label: "Features", href: "/#features" },
-  { label: "About Us", href: "/#about" },
-  { label: "FAQs", href: "/#faqs" }
+  { label: "Products", href: "#products" },
+  { label: "Features", href: "#features" },
+  { label: "About Us", href: "#about" },
+  { label: "FAQs", href: "#faqs" }
 ];
 
 export function Navbar() {
@@ -75,7 +75,7 @@ export function Navbar() {
 
           {/* Logo - Mobile */}
           <Link
-            href="/"
+            href="#top"
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
           >
             <Image
@@ -110,7 +110,7 @@ export function Navbar() {
               ))}
 
               <Link
-                href="#demo"
+                href="/#demo"
                 onClick={() => setIsOpen(false)}
                 className="cta-primary mt-2"
               >
@@ -118,7 +118,7 @@ export function Navbar() {
               </Link>
 
               <Link
-                href="#demo"
+                href="/#demo"
                 onClick={() => setIsOpen(false)}
                 className="cta-secondary"
               >
