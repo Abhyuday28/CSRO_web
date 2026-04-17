@@ -1,5 +1,5 @@
 export type Product = {
-  id: number;
+  id: string;
   name: string;
   feature: string;
   description: string;
@@ -11,7 +11,7 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    id: 1,
+    id: "1",
     name: "CSRO Aqua Pro",
     feature: "Mineral-rich purification",
     description: "Balanced filtration for modern homes with naturally refreshing taste.",
@@ -30,7 +30,7 @@ export const products: Product[] = [
     ]
   },
   {
-    id: 2,
+    id: "2",
     name: "CSRO Urban Flow",
     feature: "Compact kitchen fit",
     description: "Space-saving purification built for apartments, studios, and city living.",
@@ -49,7 +49,7 @@ export const products: Product[] = [
     ]
   },
   {
-    id: 3,
+    id: "3",
     name: "CSRO Office Elite",
     feature: "High-volume hydration",
     description: "Reliable daily purification for workspaces, teams, and reception zones.",
@@ -68,7 +68,7 @@ export const products: Product[] = [
     ]
   },
   {
-    id: 4,
+    id: "4",
     name: "CSRO Pure Drop",
     feature: "Smart taste retention",
     description: "Keeps water crisp and light with a premium multi-stage natural filter process.",
@@ -87,7 +87,7 @@ export const products: Product[] = [
     ]
   },
   {
-    id: 5,
+    id: "5",
     name: "CSRO Family Max",
     feature: "Large-capacity comfort",
     description: "Made for busy households that need more clean water throughout the day.",
@@ -106,7 +106,7 @@ export const products: Product[] = [
     ]
   },
   {
-    id: 6,
+    id: "6",
     name: "CSRO Signature+",
     feature: "Premium glass finish",
     description: "A statement purifier with sleek design, soft indicators, and dependable performance.",

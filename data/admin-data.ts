@@ -23,9 +23,12 @@ export type ServiceRequest = {
 export type AdminProduct = {
   id: string;
   name: string;
+  feature: string;
+  description: string;
   price: number;
   features: string[];
   image: string;
+  images: string[];
   tag: "Best Seller" | "New" | "";
   active: boolean;
 };
@@ -92,30 +95,51 @@ export const adminProducts: AdminProduct[] = [
   {
     id: "product-1",
     name: "CSRO Aqua Pro",
+    feature: "Mineral-rich purification",
+    description: "Balanced filtration for modern homes with naturally refreshing taste.",
     price: 14999,
-    features: ["Mineral-rich purification", "Compact wall mount", "Smart indicator"],
+    features: ["Advanced mineral retention", "High flow rate up to 15L/min", "Compact countertop design"],
     image:
       "https://images.unsplash.com/photo-1624958723474-7c1a0db2f6cb?auto=format&fit=crop&w=900&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1624958723474-7c1a0db2f6cb?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1597776992625-b623eb7ac7d4?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80"
+    ],
     tag: "Best Seller",
     active: true
   },
   {
     id: "product-2",
     name: "CSRO Family Max",
+    feature: "Large-capacity comfort",
+    description: "Made for busy households that need more clean water throughout the day.",
     price: 18999,
-    features: ["Large storage", "Natural filter process", "Family-safe water"],
+    features: ["Extra-large storage", "Easy family access", "Durable long-life filters"],
     image:
       "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80"
+    ],
     tag: "New",
     active: true
   },
   {
     id: "product-3",
     name: "CSRO Office Elite",
+    feature: "High-volume hydration",
+    description: "Reliable daily purification for workspaces, teams, and reception zones.",
     price: 24999,
-    features: ["High-volume output", "Office-ready body", "Reliable service plan"],
+    features: ["Large storage tank", "Multiple user dispensing", "Robust daily throughput"],
     image:
       "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80",
+    images: [
+      "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1581579184996-4ec66427d934?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80"
+    ],
     tag: "",
     active: false
   }

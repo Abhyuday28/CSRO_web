@@ -1,7 +1,21 @@
 import { ProductCard } from "@/components/product-card";
-import { products } from "@/data/products";
+import clientPromise from "@/lib/mongodb";
+import type { AdminProduct } from "@/data/admin-data";
 
-export default function ProductsPage() {
+export const dynamic = "force-dynamic";
+
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
+}
+
+export default async function ProductsPage() {
+  const db = await getDb();
+  const products = await db
+    .collection<AdminProduct>("products")
+    .find({ active: true })
+    .toArray();
+
   return (
     <main className="section-shell section-spacing">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

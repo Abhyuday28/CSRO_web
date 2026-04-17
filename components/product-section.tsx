@@ -1,7 +1,18 @@
-import { products } from "@/data/products";
 import { ProductCard } from "@/components/product-card";
+import clientPromise from "@/lib/mongodb";
+import type { AdminProduct } from "@/data/admin-data";
 
-export function ProductSection() {
+export const dynamic = "force-dynamic";
+
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
+}
+
+export async function ProductSection() {
+  const db = await getDb();
+  const products = await db.collection<AdminProduct>("products").find({ active: true }).toArray();
+
   return (
     <section id="products" className="section-shell section-spacing">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -11,10 +22,6 @@ export function ProductSection() {
             Purifiers crafted for every kind of space
           </p>
         </div>
-        {/* <p className="section-copy">
-          From compact home setups to high-use office environments, CSRO brings natural
-          filtration and premium aesthetics together in one reliable system.
-        </p> */}
       </div>
 
       <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">

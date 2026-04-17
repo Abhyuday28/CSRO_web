@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useState } from "react";
 
 const navLinks = [
-  { label: "Products", href: "#products" },
-  { label: "Features", href: "#features" },
-  { label: "About Us", href: "#about" },
-  { label: "FAQs", href: "#faqs" }
+  { label: "Products", href: "/#products" },
+  { label: "Features", href: "/#features" },
+  { label: "About Us", href: "/#about" },
+  { label: "FAQs", href: "/#faqs" }
 ];
 
 export function Navbar() {

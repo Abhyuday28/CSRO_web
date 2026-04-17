@@ -1,17 +1,18 @@
 import { notFound } from "next/navigation";
-import { products } from "@/data/products";
 import { ProductDetail } from "@/components/product-detail";
+import clientPromise from "@/lib/mongodb";
+import type { AdminProduct } from "@/data/admin-data";
 
-function getProduct(id: string) {
-  return products.find((product) => product.id === Number(id));
+export const dynamic = "force-dynamic";
+
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
 }
 
-export function generateStaticParams() {
-  return products.map((product) => ({ id: product.id.toString() }));
-}
-
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = getProduct(params.id);
+export default async function ProductPage({ params }: { params: { id: string } }) {
+  const db = await getDb();
+  const product = await db.collection<AdminProduct>("products").findOne({ id: params.id, active: true });
 
   if (!product) {
     notFound();

@@ -1,16 +1,23 @@
 import { NextResponse } from "next/server";
 import { createId, type FAQ } from "@/data/admin-data";
-import { readStore, updateStore } from "@/data/local-store";
+import clientPromise from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
+}
+
 export async function GET() {
-  const data = await readStore();
-  return NextResponse.json(data.faqs);
+  const db = await getDb();
+  const faqs = await db.collection<FAQ>("faqs").find().toArray();
+  return NextResponse.json(faqs);
 }
 
 export async function POST(request: Request) {
+  const db = await getDb();
   const body = (await request.json()) as Partial<FAQ>;
   const faq: FAQ = {
     id: createId("faq"),
@@ -18,54 +25,48 @@ export async function POST(request: Request) {
     answer: body.answer ?? ""
   };
 
-  await updateStore((data) => {
-    data.faqs.unshift(faq);
-  });
+  await db.collection("faqs").insertOne(faq);
 
   return NextResponse.json(faq, { status: 201 });
 }
 
 export async function PUT(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const body = (await request.json()) as Partial<FAQ>;
 
-  const updatedFaq = await updateStore((data) => {
-    const index = data.faqs.findIndex((faq) => faq.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "FAQ id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
+  const result = await db.collection<FAQ>("faqs").findOneAndUpdate(
+    { id },
+    { $set: body },
+    { returnDocument: "after" }
+  );
 
-    data.faqs[index] = { ...data.faqs[index], ...body };
-    return data.faqs[index];
-  });
-
-  if (!updatedFaq) {
+  if (!result) {
     return NextResponse.json({ message: "FAQ not found" }, { status: 404 });
   }
 
-  return NextResponse.json(updatedFaq);
+  return NextResponse.json(result);
 }
 
 export async function DELETE(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
-  const deletedFaq = await updateStore((data) => {
-    const index = data.faqs.findIndex((faq) => faq.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "FAQ id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
+  const result = await db.collection<FAQ>("faqs").findOneAndDelete({ id });
 
-    const [faq] = data.faqs.splice(index, 1);
-    return faq;
-  });
-
-  if (!deletedFaq) {
+  if (!result) {
     return NextResponse.json({ message: "FAQ not found" }, { status: 404 });
   }
 
-  return NextResponse.json(deletedFaq);
+  return NextResponse.json(result);
 }

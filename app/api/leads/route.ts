@@ -1,14 +1,20 @@
 import { NextResponse } from "next/server";
 import { createId, type Lead } from "@/data/admin-data";
-import { readStore, updateStore } from "@/data/local-store";
+import clientPromise from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
+}
+
 export async function GET() {
   try {
-    const data = await readStore();
-    return NextResponse.json(data.leads);
+    const db = await getDb();
+    const leads = await db.collection<Lead>("leads").find().toArray();
+    return NextResponse.json(leads);
   } catch (error) {
     console.error("Error reading leads store:", error);
     return NextResponse.json({ message: "Could not read leads" }, { status: 500 });
@@ -17,20 +23,19 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const db = await getDb();
     const body = (await request.json()) as Partial<Lead>;
     const lead: Lead = {
-    id: createId("lead"),
-    name: body.name ?? "",
-    phone: body.phone ?? "",
-    city: body.city ?? "",
-    product: body.product ?? "",
-    status: body.status ?? "New",
-    createdAt: body.createdAt ?? new Date().toISOString()
-  };
+      id: createId("lead"),
+      name: body.name ?? "",
+      phone: body.phone ?? "",
+      city: body.city ?? "",
+      product: body.product ?? "",
+      status: body.status ?? "New",
+      createdAt: body.createdAt ?? new Date().toISOString()
+    };
 
-    await updateStore((data) => {
-      data.leads.unshift(lead);
-    });
+    await db.collection("leads").insertOne(lead);
 
     return NextResponse.json(lead, { status: 201 });
   } catch (error) {
@@ -43,21 +48,22 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const body = (await request.json()) as Partial<Lead>;
 
-  const updatedLead = await updateStore((data) => {
-    const index = data.leads.findIndex((lead) => lead.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "Lead id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
+  const updateResult = await db.collection<Lead>("leads").updateOne({ id }, { $set: body });
 
-    data.leads[index] = { ...data.leads[index], ...body };
-    return data.leads[index];
-  });
+  if (updateResult.matchedCount === 0) {
+    return NextResponse.json({ message: "Lead not found" }, { status: 404 });
+  }
 
+  const updatedLead = await db.collection<Lead>("leads").findOne({ id });
   if (!updatedLead) {
     return NextResponse.json({ message: "Lead not found" }, { status: 404 });
   }
@@ -66,23 +72,19 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
-  const deletedLead = await updateStore((data) => {
-    const index = data.leads.findIndex((lead) => lead.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "Lead id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
-
-    const [lead] = data.leads.splice(index, 1);
-    return lead;
-  });
-
-  if (!deletedLead) {
+  const lead = await db.collection<Lead>("leads").findOne({ id });
+  if (!lead) {
     return NextResponse.json({ message: "Lead not found" }, { status: 404 });
   }
 
-  return NextResponse.json(deletedLead);
+  await db.collection<Lead>("leads").deleteOne({ id });
+  return NextResponse.json(lead);
 }

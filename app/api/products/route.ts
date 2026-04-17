@@ -1,79 +1,84 @@
 import { NextResponse } from "next/server";
 import { createId, type AdminProduct } from "@/data/admin-data";
-import { readStore, updateStore } from "@/data/local-store";
+import clientPromise from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
+}
+
 export async function GET() {
-  const data = await readStore();
-  return NextResponse.json(data.products);
+  const db = await getDb();
+  const products = await db.collection<AdminProduct>("products").find().toArray();
+  return NextResponse.json(products);
 }
 
 export async function POST(request: Request) {
+  const db = await getDb();
   const body = (await request.json()) as Partial<AdminProduct>;
   const product: AdminProduct = {
     id: createId("product"),
     name: body.name ?? "",
+    feature: body.feature ?? "",
+    description: body.description ?? "",
     price: Number(body.price ?? 0),
     features: body.features ?? [],
     image: body.image ?? "",
+    images: body.images ?? [],
     tag: body.tag ?? "",
     active: body.active ?? true
   };
 
-  await updateStore((data) => {
-    data.products.unshift(product);
-  });
+  await db.collection("products").insertOne(product);
 
   return NextResponse.json(product, { status: 201 });
 }
 
 export async function PUT(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ message: "Product id is required" }, { status: 400 });
+  }
+
   const body = (await request.json()) as Partial<AdminProduct>;
+  const updates: Partial<AdminProduct> = { ...body };
 
-  const updatedProduct = await updateStore((data) => {
-    const index = data.products.findIndex((product) => product.id === id);
+  if (body.price !== undefined) {
+    updates.price = Number(body.price);
+  }
 
-    if (index === -1) {
-      return null;
-    }
+  const result = await db.collection<AdminProduct>("products").findOneAndUpdate(
+    { id },
+    { $set: updates },
+    { returnDocument: "after" }
+  );
 
-    data.products[index] = {
-      ...data.products[index],
-      ...body,
-      price: body.price === undefined ? data.products[index].price : Number(body.price)
-    };
-    return data.products[index];
-  });
-
-  if (!updatedProduct) {
+  if (!result) {
     return NextResponse.json({ message: "Product not found" }, { status: 404 });
   }
 
-  return NextResponse.json(updatedProduct);
+  return NextResponse.json(result);
 }
 
 export async function DELETE(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
-  const deletedProduct = await updateStore((data) => {
-    const index = data.products.findIndex((product) => product.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "Product id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
+  const result = await db.collection<AdminProduct>("products").findOneAndDelete({ id });
 
-    const [product] = data.products.splice(index, 1);
-    return product;
-  });
-
-  if (!deletedProduct) {
+  if (!result) {
     return NextResponse.json({ message: "Product not found" }, { status: 404 });
   }
 
-  return NextResponse.json(deletedProduct);
+  return NextResponse.json(result);
 }

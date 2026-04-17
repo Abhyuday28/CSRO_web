@@ -1,20 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/data/products";
+import type { AdminProduct } from "@/data/admin-data";
 
 type ProductCardProps = {
-  product: Product;
+  product: AdminProduct;
 };
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="glass-panel group flex h-full flex-col overflow-hidden rounded-[30px] transition duration-300 hover:-translate-y-2 hover:shadow-card">
       <Link href={`/products/${product.id}`} className="relative aspect-[4/3] overflow-hidden">
-        <Image
+        <img
           src={product.image}
           alt={product.name}
-          fill
-          className="object-cover transition duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
       </Link>
 
@@ -26,14 +24,14 @@ export function ProductCard({ product }: ProductCardProps) {
         <p className="mt-3 flex-1 text-sm leading-6 text-slate-600 hidden sm:block">{product.description}</p>
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <Link href={`/products/${product.id}`} className="cta-primary px-4 py-2 text-sm">
-            View details
+          <Link href="/#demo" className="cta-primary px-4 py-2 text-sm">
+            Book now
           </Link>
           <Link
-            href="/#demo"
-            className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-deep transition hover:border-primary/25 hover:bg-white/90 hover:text-primary"
+            href={`/products/${product.id}`}
+            className="cta-secondary px-4 py-2 text-sm"
           >
-            Book now
+            View details
           </Link>
         </div>
       </div>

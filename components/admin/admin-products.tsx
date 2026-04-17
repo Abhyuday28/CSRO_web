@@ -16,9 +16,12 @@ type ProductPayload = Omit<AdminProduct, "id">;
 
 const blankProduct: ProductPayload = {
   name: "",
+  feature: "",
+  description: "",
   price: 0,
   features: [],
   image: "",
+  images: [],
   tag: "",
   active: true
 };
@@ -114,21 +117,59 @@ function ProductForm({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  async function toDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result;
+        if (typeof result === "string") {
+          resolve(result);
+        } else {
+          reject(new Error("Unable to read image file."));
+        }
+      };
+      reader.onerror = () => reject(new Error("Image file read failed."));
+      reader.readAsDataURL(file);
+    });
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
 
     const formData = new FormData(event.currentTarget);
     const features = String(formData.get("features") ?? "")
-      .split(/\n|,/)
+      .split(/\n|,/) 
       .map((feature) => feature.trim())
       .filter(Boolean);
 
+    const images = String(formData.get("images") ?? "")
+      .split(/\n|,/) 
+      .map((image) => image.trim())
+      .filter(Boolean);
+
+    const imageFile = formData.get("mainImageFile");
+    let imageValue = String(formData.get("image") ?? "");
+    if (imageFile instanceof File && imageFile.size > 0) {
+      imageValue = await toDataUrl(imageFile);
+    }
+
+    const additionalFiles = formData.getAll("additionalImageFiles");
+    const fileImages: string[] = [];
+    for (const file of additionalFiles) {
+      if (file instanceof File && file.size > 0) {
+        fileImages.push(await toDataUrl(file));
+      }
+    }
+
     await onSubmit({
       name: String(formData.get("name") ?? ""),
+      feature: String(formData.get("feature") ?? ""),
+      description: String(formData.get("description") ?? ""),
       price: Number(formData.get("price") ?? 0),
       features,
-      image: String(formData.get("image") ?? ""),
+      image: imageValue,
+      images: [...images, ...fileImages],
       tag: String(formData.get("tag") ?? "") as ProductPayload["tag"],
       active: formData.get("active") === "on"
     });
@@ -154,7 +195,21 @@ function ProductForm({
         />
       </label>
       <label className="grid gap-2 text-sm font-semibold text-slate-700">
-        Features
+        Feature
+        <input name="feature" defaultValue={product.feature} required className={inputClass} />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        Description
+        <textarea
+          name="description"
+          rows={4}
+          defaultValue={product.description}
+          className={inputClass}
+          placeholder="Product description"
+        />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        Key features
         <textarea
           name="features"
           rows={4}
@@ -164,8 +219,38 @@ function ProductForm({
         />
       </label>
       <label className="grid gap-2 text-sm font-semibold text-slate-700">
-        Image upload (Cloudinary URL)
-        <input name="image" type="url" defaultValue={product.image} required className={inputClass} />
+        Main image URL
+        <input
+          name="image"
+          type="url"
+          defaultValue={product.image}
+          className={inputClass}
+          placeholder="Paste image URL or choose a local file below"
+        />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        Upload main product image
+        <input name="mainImageFile" type="file" accept="image/*" className={inputClass} />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        Additional images
+        <textarea
+          name="images"
+          rows={3}
+          defaultValue={product.images.join("\n")}
+          className={inputClass}
+          placeholder="One image URL per line"
+        />
+      </label>
+      <label className="grid gap-2 text-sm font-semibold text-slate-700">
+        Upload additional images
+        <input
+          name="additionalImageFiles"
+          type="file"
+          accept="image/*"
+          multiple
+          className={inputClass}
+        />
       </label>
       <label className="grid gap-2 text-sm font-semibold text-slate-700">
         Tag

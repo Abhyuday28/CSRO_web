@@ -1,17 +1,24 @@
 import { NextResponse } from "next/server";
 import { createId, type ServiceRequest } from "@/data/admin-data";
-import { readStore, updateStore } from "@/data/local-store";
+import clientPromise from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+async function getDb() {
+  const client = await clientPromise;
+  return client.db(process.env.MONGODB_DB ?? "csro");
+}
+
 export async function GET() {
-  const data = await readStore();
-  return NextResponse.json(data.serviceRequests);
+  const db = await getDb();
+  const serviceRequests = await db.collection<ServiceRequest>("serviceRequests").find().toArray();
+  return NextResponse.json(serviceRequests);
 }
 
 export async function POST(request: Request) {
   try {
+    const db = await getDb();
     const body = (await request.json()) as Partial<ServiceRequest>;
     const serviceRequest: ServiceRequest = {
       id: createId("service"),
@@ -22,9 +29,7 @@ export async function POST(request: Request) {
       createdAt: body.createdAt ?? new Date().toISOString()
     };
 
-    await updateStore((data) => {
-      data.serviceRequests.unshift(serviceRequest);
-    });
+    await db.collection("serviceRequests").insertOne(serviceRequest);
 
     return NextResponse.json(serviceRequest, { status: 201 });
   } catch (error) {
@@ -37,21 +42,24 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const body = (await request.json()) as Partial<ServiceRequest>;
 
-  const updatedRequest = await updateStore((data) => {
-    const index = data.serviceRequests.findIndex((item) => item.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "Service request id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
+  const updateResult = await db
+    .collection<ServiceRequest>("serviceRequests")
+    .updateOne({ id }, { $set: body });
 
-    data.serviceRequests[index] = { ...data.serviceRequests[index], ...body };
-    return data.serviceRequests[index];
-  });
+  if (updateResult.matchedCount === 0) {
+    return NextResponse.json({ message: "Service request not found" }, { status: 404 });
+  }
 
+  const updatedRequest = await db.collection<ServiceRequest>("serviceRequests").findOne({ id });
   if (!updatedRequest) {
     return NextResponse.json({ message: "Service request not found" }, { status: 404 });
   }
@@ -60,23 +68,19 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
+  const db = await getDb();
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
-  const deletedRequest = await updateStore((data) => {
-    const index = data.serviceRequests.findIndex((item) => item.id === id);
+  if (!id) {
+    return NextResponse.json({ message: "Service request id is required" }, { status: 400 });
+  }
 
-    if (index === -1) {
-      return null;
-    }
-
-    const [serviceRequest] = data.serviceRequests.splice(index, 1);
-    return serviceRequest;
-  });
-
-  if (!deletedRequest) {
+  const requestItem = await db.collection<ServiceRequest>("serviceRequests").findOne({ id });
+  if (!requestItem) {
     return NextResponse.json({ message: "Service request not found" }, { status: 404 });
   }
 
-  return NextResponse.json(deletedRequest);
+  await db.collection<ServiceRequest>("serviceRequests").deleteOne({ id });
+  return NextResponse.json(requestItem);
 }
