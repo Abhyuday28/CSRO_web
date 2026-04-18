@@ -62,6 +62,7 @@ export function AdminDashboard({
   const [faqs, setFaqs] = useState<FAQ[]>(initialFaqs);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const pageTitle = useMemo(
     () => navItems.find((item) => item.id === activeSection)?.label ?? "Dashboard",
@@ -91,6 +92,12 @@ export function AdminDashboard({
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      setIsMenuOpen(false);
+    }
+  }, [activeSection]);
 
   async function updateLeadStatus(id: string, status: LeadStatus) {
     const updatedLead = await apiRequest<Lead>(`/api/leads?id=${id}`, {
@@ -187,7 +194,7 @@ export function AdminDashboard({
     <main className="min-h-screen overflow-hidden bg-[#f7f5f0] text-deep">
       <div className="absolute inset-0 -z-10 bg-hero-radial" />
       <div className="grid min-h-screen gap-0 lg:grid-cols-[280px_1fr]">
-        <aside className="border-b border-white/50 bg-white/70 shadow-card backdrop-blur-xl lg:border-b-0 lg:border-r">
+        <aside className="hidden border-b border-white/50 bg-white/70 shadow-card backdrop-blur-xl lg:block lg:border-b-0 lg:border-r">
           <div className="px-5 py-6">
             <div className="flex h-20 items-center rounded-lg bg-white/90 px-4 shadow-glow">
               <Image
@@ -199,9 +206,8 @@ export function AdminDashboard({
                 priority
               />
             </div>
-            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.24em] text-primary">Admin CRM</p>
           </div>
-          <nav className="flex gap-2 overflow-x-auto px-4 pb-5 lg:grid lg:overflow-visible">
+          <nav className="grid gap-2 px-4 pb-5 lg:overflow-visible">
             {navItems.map((item) => (
               <button
                 key={item.id}
@@ -219,18 +225,93 @@ export function AdminDashboard({
           </nav>
         </aside>
 
-        <section className="min-w-0">
-          <header className="sticky top-0 z-30 border-b border-white/50 bg-white/75 px-5 py-7 backdrop-blur-xl">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary">Admin Dashboard</p>
-                <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-deep">{pageTitle}</h1>
+        <section className="min-w-0 relative">
+          <header className="sticky top-0 z-30 border-b border-white/50 bg-white/75 px-5 py-5 backdrop-blur-xl lg:px-5 lg:py-7">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  
+                  <div className="mt-3 lg:hidden">
+                    <Image
+                      src="/csro_draft.svg"
+                      alt="CSRO Logo"
+                      width={140}
+                      height={40}
+                      className="h-10 w-auto object-contain"
+                      priority
+                    />
+                  </div>
+
+                  <h1 className="p-2 hidden text-3xl font-extrabold tracking-tight text-deep lg:block">{pageTitle}</h1>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsMenuOpen(true)}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-deep shadow-sm transition hover:border-primary/30 hover:text-primary lg:hidden"
+                  aria-label="Open navigation menu"
+                >
+                  <span className="text-2xl">☰</span>
+                </button>
               </div>
-              <div className="rounded-lg border border-primary/20 bg-white/70 px-4 py-2 text-sm font-semibold text-deep shadow-sm">
+              <div className="hidden rounded-lg border border-primary/20 bg-white/70 px-4 py-2 text-sm font-semibold text-deep shadow-sm lg:block">
                 Admin
               </div>
             </div>
           </header>
+
+              <div className="lg:hidden mt-4 ml-4 w-fit rounded-lg border border-white/50 bg-white/45 backdrop-blur-xl px-4 py-3 text-xs font-semibold uppercase tracking-[0.28em] text-primary shadow-sm">Admin Dashboard</div>
+          <div
+            className={`fixed inset-y-0 left-0 z-40 w-[calc(100%-2rem)] max-w-xs overflow-hidden border-r border-slate-200 bg-white/95 p-4 shadow-xl transition duration-300 lg:hidden ${
+              isMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <div className="inline-flex h-12 items-center rounded-xl bg-white/90 px-3 py-2 shadow-sm">
+                <Image
+                  src="/csro_draft.svg"
+                  alt="CSRO Logo"
+                  width={120}
+                  height={36}
+                  className="h-8 w-auto object-contain"
+                  priority
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(false)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-deep shadow-sm transition hover:border-primary/30 hover:text-primary"
+                aria-label="Close navigation menu"
+              >
+                ×
+              </button>
+            </div>
+            <nav className="flex flex-col gap-3">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveSection(item.id);
+                  }}
+                  className={`text-left text-sm font-semibold transition ${
+                    activeSection === item.id
+                      ? "rounded-2xl border border-primary bg-primary px-4 py-3 text-white shadow-glow"
+                      : "rounded-2xl border border-transparent bg-slate-100 px-4 py-3 text-deep hover:border-primary/25 hover:bg-white hover:text-primary"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+          {isMenuOpen ? (
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 z-30 bg-slate-900/20 lg:hidden"
+              aria-label="Close navigation overlay"
+            />
+          ) : null}
 
           <div className="p-4 sm:p-6 lg:p-8">{renderSection()}</div>
         </section>

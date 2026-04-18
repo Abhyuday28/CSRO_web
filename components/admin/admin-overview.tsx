@@ -43,7 +43,7 @@ export function AdminOverview({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
           <div key={card.label} className="rounded-lg border border-white/50 bg-white/75 p-5 shadow-card backdrop-blur-xl">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">{card.label}</p>
