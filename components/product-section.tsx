@@ -24,7 +24,7 @@ export async function ProductSection() {
         </div>
       </div>
 
-      <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
+      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

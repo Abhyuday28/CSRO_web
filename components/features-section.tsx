@@ -27,7 +27,7 @@ export function FeaturesSection() {
         </h2>
       </div>
 
-      <div className="glass-panel mt-10 rounded-[36px] p-6 sm:p-8 lg:p-10">
+      <div className="glass-panel mt-6 rounded-[36px] p-6 sm:p-8 lg:p-10">
         <div className="rounded-[32px] border border-white/60 bg-white/70 p-8 shadow-card sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary sm:text-sm">
             The Science Of Purity

@@ -29,7 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </Link>
           <Link
             href={`/products/${product.id}`}
-            className="cta-secondary px-4 py-2 text-sm"
+            className="cta-secondary px-4 py-2 text-sm hidden sm:block"
           >
             View details
           </Link>

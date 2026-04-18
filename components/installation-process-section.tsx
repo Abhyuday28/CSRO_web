@@ -24,7 +24,7 @@ export function InstallationProcessSection() {
         
       </div>
 
-      <div className="glass-panel mt-10 overflow-hidden rounded-[36px] p-6 sm:p-8 shadow-card">
+      <div className="glass-panel mt-6 overflow-hidden rounded-[36px] p-6 sm:p-8 shadow-card">
         <div className="rounded-[32px] border border-white/60 bg-white/70 p-8 shadow-card sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-primary sm:text-sm">
             Pure water in your Home

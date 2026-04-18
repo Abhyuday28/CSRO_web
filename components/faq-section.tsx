@@ -73,7 +73,7 @@ export function FaqSection() {
           <p className="mt-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary">Everything customers usually ask before booking</p>
         </div>
 
-        <div className="mt-10 space-y-4">
+        <div className="mt-8 space-y-4">
           {faqs.slice(0, visibleCount).map((faq) => (
             <details key={faq.question} className="glass-panel rounded-[28px] p-6">
               <summary className="flex items-center justify-between cursor-pointer list-none text-lg font-semibold text-deep">

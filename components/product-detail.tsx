@@ -95,6 +95,20 @@ export function ProductDetail({ product }: ProductDetailProps) {
             </button>
           </div>
 
+          <div className="flex justify-center gap-2">
+            {Array.from({ length: product.images.length > 0 ? product.images.length : 1 }, (_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setSelectedIndex(i)}
+                className={`h-2 rounded-full transition-all ${
+                  i === selectedIndex ? "w-4 bg-primary" : "w-2 bg-slate-300"
+                }`}
+                aria-label={`View image ${i + 1}`}
+              />
+            ))}
+          </div>
+
           <div className="mt-6 hidden rounded-[28px] border border-white/50 bg-white/80 p-6 shadow-card lg:block">
             <div className="relative">
               <div className="absolute left-2 top-1/2 z-10 -translate-y-1/2 sm:left-4">
