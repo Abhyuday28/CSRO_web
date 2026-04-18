@@ -70,7 +70,7 @@ export function FaqSection() {
       <div className="mx-auto max-w-4xl">
         <div className="text-center">
           <h2 className="section-heading mt-2">FAQs</h2>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary">Everything customers usually ask before booking</p>
+          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.28em] text-primary">Everything customers usually ask</p>
         </div>
 
         <div className="mt-8 space-y-4">

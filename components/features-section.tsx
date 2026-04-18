@@ -4,17 +4,20 @@ const features = [
   {
     title: "Multi-stage purification",
     copy:
-      "Layered filtration reduces sediments, odors, and unwanted impurities while keeping water crisp and refreshing."
+      "Layered filtration reduces sediments, odors, and unwanted impurities while keeping water crisp and refreshing.",
+    image: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=500&q=60"
   },
   {
     title: "Mineral-conscious performance",
     copy:
-      "The system is designed to deliver cleaner water without leaving the taste flat, helping retain a balanced drinking experience."
+      "The system is designed to deliver cleaner water without leaving the taste flat, helping retain a balanced drinking experience.",
+    image: "https://images.unsplash.com/photo-1609126281623-2cc3d4b7a434?auto=format&fit=crop&w=500&q=60"
   },
   {
     title: "Reliable service support",
     copy:
-      "Certified technicians handle installation and maintenance so your purifier stays dependable for daily home use."
+      "Certified technicians handle installation and maintenance so your purifier stays dependable for daily home use.",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=500&q=60"
   }
 ];
 
@@ -48,17 +51,26 @@ export function FeaturesSection() {
               {features.map((feature, index) => (
                 <div
                   key={feature.title}
-                  className="flex items-start gap-5"
+                  className="flex flex-col items-start gap-5 sm:flex-row"
                   style={{ animationDelay: `${index * 120}ms` }}
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-lg font-bold text-primary sm:h-16 sm:w-16 sm:text-2xl">
+                  <div className="hidden sm:flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-lg font-bold text-primary sm:h-16 sm:w-16 sm:text-2xl">
                     {index + 1}
                   </div>
-                  <div>
+                  <div className="w-full">
                     <h3 className="text-xl font-semibold tracking-[-0.03em] text-deep sm:text-xl">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-base leading-8 text-slate-600">
+                    <div className="sm:hidden mt-4 rounded-2xl overflow-hidden">
+                      <Image
+                        src={feature.image}
+                        alt={feature.title}
+                        width={500}
+                        height={500}
+                        className="w-full h-auto object-cover"
+                      />
+                    </div>
+                    <p className="hidden sm:block mt-2 text-base leading-8 text-slate-600">
                       {feature.copy}
                     </p>
                   </div>

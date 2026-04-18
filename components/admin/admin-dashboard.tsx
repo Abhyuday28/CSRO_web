@@ -231,7 +231,7 @@ export function AdminDashboard({
               <div className="flex items-center justify-between gap-4">
                 <div>
                   
-                  <div className="mt-3 lg:hidden">
+                  <div className="mt-3 lg:hidden flex items-center gap-4">
                     <Image
                       src="/csro_draft.svg"
                       alt="CSRO Logo"
@@ -240,6 +240,7 @@ export function AdminDashboard({
                       className="h-10 w-auto object-contain"
                       priority
                     />
+                    <span className=" text-xs font-semibold uppercase tracking-[0.24em] text-primary">Admin</span>
                   </div>
 
                   <h1 className="p-2 hidden text-3xl font-extrabold tracking-tight text-deep lg:block">{pageTitle}</h1>
@@ -259,7 +260,7 @@ export function AdminDashboard({
             </div>
           </header>
 
-              <div className="lg:hidden mt-4 ml-4 w-fit rounded-lg border border-white/50 bg-white/45 backdrop-blur-xl px-4 py-3 text-xs font-semibold uppercase tracking-[0.28em] text-primary shadow-sm">Admin Dashboard</div>
+              <div className="lg:hidden mt-4 ml-4 w-fit rounded-lg backdrop-blur-xl px-4 py-3 text-md font-semibold uppercase tracking-[0.28em] text-deep shadow-sm">{pageTitle}</div>
           <div
             className={`fixed inset-y-0 left-0 z-40 w-[calc(100%-2rem)] max-w-xs overflow-hidden border-r border-slate-200 bg-white/95 p-4 shadow-xl transition duration-300 lg:hidden ${
               isMenuOpen ? "translate-x-0" : "-translate-x-full"
