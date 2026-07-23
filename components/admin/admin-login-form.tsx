@@ -8,8 +8,9 @@ import { useState } from "react";
 export function AdminLoginForm() {
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const phone = String(formData.get("phone") ?? "").trim();
@@ -20,8 +21,33 @@ export function AdminLoginForm() {
       return;
     }
 
-    window.sessionStorage.setItem("csro-admin-phone", phone);
-    router.push("/admin");
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ phone, password })
+      });
+
+      const payload = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        setError(payload.error ?? "Login failed.");
+        return;
+      }
+
+      window.sessionStorage.setItem("csro-admin-phone", phone);
+      document.cookie = "csro-admin-auth=true; path=/; max-age=3600; SameSite=Lax";
+      router.push("/admin");
+    } catch {
+      setError("Unable to reach the admin login service.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -85,8 +111,8 @@ export function AdminLoginForm() {
 
               {error ? <p className="text-sm font-semibold text-red-600">{error}</p> : null}
 
-              <button type="submit" className="cta-primary w-full rounded-lg">
-                Login to Dashboard
+              <button type="submit" className="cta-primary w-full rounded-lg" disabled={isSubmitting}>
+                {isSubmitting ? "Checking credentials..." : "Login to Dashboard"}
               </button>
 
               <Link href="/" className="text-center text-sm font-semibold text-slate-600 transition hover:text-primary">

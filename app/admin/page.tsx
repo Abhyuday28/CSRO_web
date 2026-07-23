@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { getMongoClient } from "@/lib/mongodb";
 import type { AdminProduct, FAQ, Lead, ServiceRequest } from "@/data/admin-data";
@@ -14,6 +16,13 @@ async function getDb() {
 }
 
 export default async function AdminPage() {
+  const cookieStore = await cookies();
+  const isAuthenticated = cookieStore.get("csro-admin-auth")?.value === "true";
+
+  if (!isAuthenticated) {
+    redirect("/admin/login");
+  }
+
   const db = await getDb();
 
   const [leads, serviceRequests, products, faqs] = await Promise.all([

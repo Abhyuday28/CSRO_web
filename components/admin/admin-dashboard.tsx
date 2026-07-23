@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { AdminFaqs } from "@/components/admin/admin-faqs";
 import { AdminLeads } from "@/components/admin/admin-leads";
@@ -55,6 +56,7 @@ export function AdminDashboard({
   initialProducts: AdminProduct[];
   initialFaqs: FAQ[];
 }) {
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState<Section>("dashboard");
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
   const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>(initialServiceRequests);
@@ -98,6 +100,12 @@ export function AdminDashboard({
       setIsMenuOpen(false);
     }
   }, [activeSection]);
+
+  function handleLogout() {
+    document.cookie = "csro-admin-auth=; path=/; max-age=0; SameSite=Lax";
+    window.sessionStorage.removeItem("csro-admin-phone");
+    router.push("/");
+  }
 
   async function updateLeadStatus(id: string, status: LeadStatus) {
     const updatedLead = await apiRequest<Lead>(`/api/leads?id=${id}`, {
@@ -254,8 +262,17 @@ export function AdminDashboard({
                   <span className="text-2xl">☰</span>
                 </button>
               </div>
-              <div className="hidden rounded-lg border border-primary/20 bg-white/70 px-4 py-2 text-sm font-semibold text-deep shadow-sm lg:block">
-                Admin
+              <div className="hidden items-center gap-3 lg:flex">
+                <div className="rounded-lg border border-primary/20 bg-white/70 px-4 py-2 text-sm font-semibold text-deep shadow-sm">
+                  Admin
+                </div>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-lg border border-primary/20 bg-white px-4 py-2 text-sm font-semibold text-deep transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                >
+                  Logout
+                </button>
               </div>
             </div>
           </header>
@@ -303,6 +320,16 @@ export function AdminDashboard({
                   {item.label}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  handleLogout();
+                }}
+                className="mt-2 rounded-2xl border border-primary/20 bg-white px-4 py-3 text-left text-sm font-semibold text-deep transition hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+              >
+                Logout
+              </button>
             </nav>
           </div>
           {isMenuOpen ? (
