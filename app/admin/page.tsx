@@ -1,5 +1,5 @@
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
-import clientPromise from "@/lib/mongodb";
+import { getMongoClient } from "@/lib/mongodb";
 import type { AdminProduct, FAQ, Lead, ServiceRequest } from "@/data/admin-data";
 
 export const metadata = {
@@ -9,7 +9,7 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 async function getDb() {
-  const client = await clientPromise;
+  const client = await getMongoClient();
   return client.db(process.env.MONGODB_DB ?? "csro");
 }
 

@@ -1,11 +1,11 @@
 import { ProductCard } from "@/components/product-card";
-import clientPromise from "@/lib/mongodb";
+import { getMongoClient } from "@/lib/mongodb";
 import type { AdminProduct } from "@/data/admin-data";
 
 export const dynamic = "force-dynamic";
 
 async function getDb() {
-  const client = await clientPromise;
+  const client = await getMongoClient();
   return client.db(process.env.MONGODB_DB ?? "csro");
 }
 

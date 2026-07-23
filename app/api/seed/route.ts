@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import clientPromise from "@/lib/mongodb";
+import { getMongoClient } from "@/lib/mongodb";
 import {
   adminProducts,
   adminLeads,
@@ -11,7 +11,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function getDb() {
-  const client = await clientPromise;
+  const client = await getMongoClient();
   return client.db(process.env.MONGODB_DB ?? "csro");
 }
 

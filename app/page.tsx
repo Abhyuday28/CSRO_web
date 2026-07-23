@@ -9,6 +9,8 @@ import { TestimonialSection } from "@/components/testimonial-section";
 import { TrustSection } from "@/components/trust-section";
 import { WhatsAppFloat } from "@/components/whatsapp-float";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <main className="relative pb-16">

@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { createId, type FAQ } from "@/data/admin-data";
-import clientPromise from "@/lib/mongodb";
+import { getMongoClient } from "@/lib/mongodb";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function getDb() {
-  const client = await clientPromise;
+  const client = await getMongoClient();
   return client.db(process.env.MONGODB_DB ?? "csro");
 }
 
