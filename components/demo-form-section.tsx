@@ -150,7 +150,7 @@ export function DemoFormSection({ modal = false, demoOnly = false, onClose }: De
 
           <div className={modal ? "mt-0" : "mt-0 sm:mt-10"}>
             {demoOnly || activeForm === "demo" ? (
-              <form className={`mx-auto grid max-w-2xl gap-4 rounded-[28px] border border-white/40 bg-white/75 shadow-card ${modal ? "p-4 sm:p-5" : "p-6"}`} onSubmit={handleDemoSubmit}>
+              <form className={`mx-auto grid max-w-2xl gap-4 rounded-[28px] border border-white/40 bg-white/75 shadow-card ${modal ? "p-7 sm:p-8" : "p-6"}`} onSubmit={handleDemoSubmit}>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Book Free Demo</p>
                 <h3 className="mt-3 text-2xl font-semibold text-deep">Demo booking form</h3>
 
@@ -201,7 +201,7 @@ export function DemoFormSection({ modal = false, demoOnly = false, onClose }: De
                 {message ? <p className="text-sm font-semibold text-primary">{message}</p> : null}
 
                 <button type="submit" disabled={isSubmitting} className="cta-primary w-full sm:w-fit disabled:cursor-not-allowed disabled:opacity-70">
-                  {isSubmitting ? "Submitting..." : "Book Free Demo"}
+                  {isSubmitting ? "Submitting..." : "Book Your Demo"}
                 </button>
               </form>
             ) : (
