@@ -47,10 +47,10 @@ export function Navbar() {
 
         {/* CTA Buttons */}
         <div className="hidden flex-1 items-center justify-end gap-3 md:flex">
-          <Link href="#demo" className="cta-primary">
+          <Link href="/#demo" className="cta-primary">
             Book Free Demo
           </Link>
-          <Link href="#demo" className="cta-secondary">
+          <Link href="/#demo" className="cta-secondary">
             Service Request
           </Link>
         </div>

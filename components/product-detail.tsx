@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { AdminProduct } from "@/data/admin-data";
+import { DemoFormSection } from "@/components/demo-form-section";
 
 type ProductDetailProps = {
   product: AdminProduct;
@@ -10,6 +11,7 @@ type ProductDetailProps = {
 
 export function ProductDetail({ product }: ProductDetailProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
   const selectedImage = product.images[selectedIndex] ?? product.image;
 
   const handlePrevImage = () => {
@@ -21,7 +23,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
   };
 
   return (
-    <main className="section-shell section-spacing">
+    <>
+      <main className="section-shell section-spacing">
       <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
         <div className="order-2 lg:order-1">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
@@ -38,9 +41,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Price</p>
                 <p className="mt-2 text-4xl font-extrabold text-deep">₹{product.price.toLocaleString("en-IN")}</p>
               </div>
-              <Link href="/#demo" className="cta-primary px-5 py-3 text-sm">
+              <button
+                type="button"
+                onClick={() => setIsDemoOpen(true)}
+                className="cta-primary px-5 py-3 text-sm"
+              >
                 Book a demo
-              </Link>
+              </button>
             </div>
 
             <div>
@@ -169,6 +176,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
           Back to products
         </Link>
       </div>
-    </main>
+      </main>
+
+      {isDemoOpen ? <DemoFormSection modal demoOnly onClose={() => setIsDemoOpen(false)} /> : null}
+    </>
   );
 }

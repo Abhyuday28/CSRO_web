@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 
-export function DemoFormSection() {
+type DemoFormSectionProps = {
+  modal?: boolean;
+  demoOnly?: boolean;
+  onClose?: () => void;
+};
+
+export function DemoFormSection({ modal = false, demoOnly = false, onClose }: DemoFormSectionProps) {
   const [activeForm, setActiveForm] = useState<"demo" | "service">("demo");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,10 +93,26 @@ export function DemoFormSection() {
   }
 
   return (
-    <section id="demo" className="section-shell section-spacing">
-      <div className="glass-panel rounded-[34px] p-6 sm:p-8 lg:p-10">
+    <div
+      id={modal ? undefined : "demo"}
+      className={modal ? "fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm" : "section-shell section-spacing"}
+      role={modal ? "dialog" : undefined}
+      aria-modal={modal ? "true" : undefined}
+      aria-label={modal ? "Book a free demo" : undefined}
+    >
+      <div className={`glass-panel relative rounded-[34px] p-4 sm:p-6 lg:p-10 ${modal ? "w-full max-w-3xl" : ""}`}>
+        {modal ? (
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xl text-slate-600 transition hover:border-primary hover:text-primary sm:right-6 sm:top-6"
+            aria-label="Close demo form"
+          >
+            ×
+          </button>
+        ) : null}
         <div className="grid gap-6">
-          <div>
+          {!demoOnly ? <div>
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
               Request type
             </p>
@@ -98,9 +120,9 @@ export function DemoFormSection() {
             <p className="section-copy mt-4">
               Pick one option below as required.
             </p>
-          </div>
+          </div> : null}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          {!demoOnly ? <div className="grid gap-4 sm:grid-cols-2">
             <button
               type="button"
               onClick={() => setActiveForm("demo")}
@@ -124,11 +146,11 @@ export function DemoFormSection() {
             >
               <p className="text-sm font-semibold uppercase tracking-[0.28em]">Request a service</p>
             </button>
-          </div>
+          </div> : null}
 
-          <div className="mt-0 sm:mt-10">
-            {activeForm === "demo" ? (
-              <form className="grid gap-4 mx-auto max-w-2xl rounded-[28px] border border-white/40 bg-white/75 p-6 shadow-card" onSubmit={handleDemoSubmit}>
+          <div className={modal ? "mt-0" : "mt-0 sm:mt-10"}>
+            {demoOnly || activeForm === "demo" ? (
+              <form className={`mx-auto grid max-w-2xl gap-4 rounded-[28px] border border-white/40 bg-white/75 shadow-card ${modal ? "p-4 sm:p-5" : "p-6"}`} onSubmit={handleDemoSubmit}>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">Book Free Demo</p>
                 <h3 className="mt-3 text-2xl font-semibold text-deep">Demo booking form</h3>
 
@@ -159,7 +181,7 @@ export function DemoFormSection() {
                   Address
                   <textarea
                     name="demoAddress"
-                    rows={4}
+                    rows={modal ? 3 : 4}
                     required
                     className="resize-none rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-deep outline-none shadow-sm transition focus:border-success focus:ring-2 focus:ring-success/20"
                     placeholder="Where should we schedule the demo?"
@@ -250,6 +272,6 @@ export function DemoFormSection() {
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
