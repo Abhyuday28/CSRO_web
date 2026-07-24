@@ -23,9 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        {/* <NavbarWrapper /> */}
+        <NavbarWrapper />
         {children}
-        {/* <FooterWrapper /> */}
+        <FooterWrapper />
       </body>
     </html>
   );
