@@ -50,7 +50,7 @@ export function HeroSection() {
             </div>
             <div className="animate-float relative z-10 overflow-hidden rounded-[32px] bg-gradient-to-b from-sky-100 to-white p-5 shadow-glow">
               <Image
-                src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=1200&q=80"
+                src="/hero-water-purifier.png"
                 alt="Premium CSRO water purifier"
                 width={960}
                 height={1120}
