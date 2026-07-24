@@ -1,14 +1,14 @@
-"use client";
+// "use client";
 
-import { usePathname } from "next/navigation";
-import { Navbar } from "@/components/navbar";
+// import { usePathname } from "next/navigation";
+// import { Navbar } from "@/components/navbar";
 
-export function NavbarWrapper() {
-  const pathname = usePathname();
+// export function NavbarWrapper() {
+//   const pathname = usePathname();
 
-  if (pathname?.startsWith("/admin")) {
-    return null;
-  }
+//   if (pathname?.startsWith("/admin")) {
+//     return null;
+//   }
 
-  return <Navbar />;
-}
+//   return <Navbar />;
+// }
