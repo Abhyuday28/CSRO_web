@@ -1,14 +1,14 @@
-// "use client";
+"use client";
 
-// import { usePathname } from "next/navigation";
-// import { Footer } from "@/components/footer";
+import { usePathname } from "next/navigation";
+import { Footer } from "@/components/footer";
 
-// export function FooterWrapper() {
-//   const pathname = usePathname();
+export function FooterWrapper() {
+  const pathname = usePathname();
 
-//   if (pathname?.startsWith("/admin")) {
-//     return null;
-//   }
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
-//   return <Footer />;
-// }
+  return <Footer />;
+}
