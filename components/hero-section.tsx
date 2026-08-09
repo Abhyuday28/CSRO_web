@@ -17,7 +17,7 @@ export function HeroSection() {
 
           <h1 className="mt-6 max-w-2xl text-4xl font-extrabold leading-[0.95] tracking-[-0.05em] text-deep sm:text-5xl lg:text-7xl">
             <span className="block">Water : the way</span>
-            <span className="mt-64block bg-gradient-to-r from-primary to-aqua bg-clip-text text-transparent">
+            <span className="mt-64 bg-gradient-to-r from-primary to-aqua bg-clip-text text-transparent">
               nature intended.
             </span>
           </h1>

@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export default function Home() {
   return (
     <main className="relative pb-16">
-      <div className="absolute inset-0 -z-10 bg-hero-radial" />
+      {/* <div className="absolute inset-0 -z-10 bg-hero-radial" /> */}
       <HeroSection />
       <TrustSection />
       <ProductSection />

@@ -6,6 +6,7 @@ import { FooterWrapper } from "@/components/footer-wrapper";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
+   weight: ["400", "500", "600", "700", "800"],
   variable: "--font-montserrat"
 });
 
@@ -22,9 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={montserrat.variable}>
-        <NavbarWrapper />
-        {children}
+      <body className= {montserrat.variable}>
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[900px] bg-hero-radial" />
+          <NavbarWrapper />
+          {children}
+        </div>
         <FooterWrapper />
       </body>
     </html>
